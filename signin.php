@@ -1,3 +1,5 @@
+<!-- Sign-in page show and logic -->
+
 <?php
 
 //Error checking for username, login credentials, and valid sid
@@ -13,22 +15,28 @@ if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "usernameExists")) {
 if (isset($_GET['msg']) && strstr($_GET['msg'], "registerSuccess")) {
     echo '<h2>Successfully registered:</h2>';
 }
+?>
 
+<?php
 //If the form is not submitted, show the input boxes
 if (!isset($_POST['submit'])) {
-    echo '<div class="container">';
-        echo '<form action="" method="POST">';
-            echo '<h1 class="signin-heading">Sign In</h1>';
-            echo '<label for="username">Username:</label>';
-            echo '<input type="text" id="username" name="username" required><br>';
-            echo '<label for="password">Password:</label>';
-            echo '<input type="password" id="password" name="password" required><br>';
-            echo '<button type="submit" name="submit" >Sign In</button>';
-            echo '<p>New to Volunteer Hub? <a href="signup.php">Join Today</a></p>';
-        echo '</form>';
-    echo '</div>';
+?>
+    <div class="container">
+        <form action="" method="POST">
+            <h1 class="signin-heading">Sign In</h1>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
+            <button type="submit" name="submit">Sign In</button>
+            <p>New to Volunteer Hub? <a href="signup.php">Join Today</a></p>
+        </form>
+    </div>
+<?php
 }
+?>
 
+<?php
 //If the form is submitted, perform the following checks and input data into the database
 if (isset($_POST['submit'])) {
     $username = addslashes($_POST['username']);
