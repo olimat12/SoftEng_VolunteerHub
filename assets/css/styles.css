@@ -1,21 +1,10 @@
 /* General body styling */
 body {
-    margin: 0;
+    margin: 0px;
     padding: 0;
+    background: whitesmoke;
+    background-size: cover;
     font-family: 'Roboto', Arial, sans-serif;
-    background-color: whitesmoke; /* Default background for non-home pages */
-}
-
-/* Container layout */
-.container {
-    position: relative;
-    width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 /* Header and logo styling */
@@ -25,10 +14,21 @@ body {
     align-items: center;
 }
 
+#logo-dropdown-container {
+    display: flex;
+    align-items: center;
+	padding: 20px;
+}
+
 #logo img {
     max-width: 100%;
     height: auto;
-    margin-right: 10px;
+    margin-left: 10px;
+}
+
+/* Dropdown Menu for additional links */
+#dropdown {
+    position: relative;
 }
 
 #dropdown-icon {
@@ -37,7 +37,46 @@ body {
     color: #140650;
 }
 
-/* Buttons */
+#dropdown-content {
+    display: none;
+    position: absolute;
+    top: 30px;
+    left: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    padding: 10px;
+}
+
+/* Show dropdown content on hover */
+#dropdown:hover #dropdown-content {
+    display: block;
+}
+
+#dropdown-content button {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    text-align: left;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+#dropdown-content button:hover {
+    background-color: #ddd;
+}
+
+/* Buttons Section */
+#buttons {
+	display: flex;
+    text-align: right;
+	align-items: center;
+	gap: 10px;
+	padding-right: 20px;
+}
+
 #buttons button {
     margin-left: 6px;
     background-color: #140650;
@@ -51,18 +90,129 @@ body {
     cursor: pointer;
 }
 
+/* Container layout */
+.container {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Centered text for headers */
+.centered-text {
+    text-align: center;
+    color: #140650;
+    font-size: 20px;
+    font-family: 'Roboto', Arial, sans-serif;
+    margin-bottom: 20px;
+}
+
+/* Additional container for green area */
+.green-area {
+    background-color: #7CC623;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    width: 100%; /* Adjust width */
+    max-width: 800px; /* Limit maximum width */
+}
+
+.results-area {
+    width: 90%; /* Adjust width */
+    max-width: 800px; /* Limit maximum width */
+    max-height: 300px; /* Adjust the height as needed */
+    overflow-y: auto; /* Enable vertical scrollbar */
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+    display: flex; /* Use flexbox */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    margin: 0 auto; /* Center horizontally */
+}
+
+/* Profile dropdown styling */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+    top: 100%;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+/* Show profile dropdown on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Search container styling */
+.search-container {
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.search-container input,
+.search-container select {
+    margin: 5px;
+    padding: 8px;
+    width: calc(50% - 10px);
+    box-sizing: border-box;
+}
+
+.search-button {
+    background-color: #140650;
+    color: #FFFFFF;
+    border: 1px solid #2E6DA4;
+    border-radius: 4px;
+    padding: 6px 20px;
+    margin-top: 10px;
+    font-family: 'Roboto', Arial, sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+    cursor: pointer;
+}
+
 /* Footer styling */
 footer {
     text-align: center;
     background-color: #333;
     color: #fff;
-    padding: 10px;
+    padding: 20px;
     position: fixed;
     bottom: 0;
     width: 100%;
 }
 
-/* Sign-up form styles */
+/* Signup form styles */
 .signup-heading {
     text-align: center;
     color: #140650;
@@ -104,6 +254,7 @@ form button {
     cursor: pointer;
 }
 
+/* Name input container styling */
 .name-container {
     display: flex;
     justify-content: space-between;
@@ -123,11 +274,11 @@ form button {
     width: 100%;
 }
 
-/* Background and text centering for the home page */
+/* Home page background */
 .home-bg {
     background: url('../../images/background.jpg') no-repeat center center fixed;
     background-size: cover;
-    height: 100vh; /* Full viewport height */
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -135,10 +286,6 @@ form button {
 }
 
 /* Centered text for home page */
-.centered-text {
-    color: #140650;
-}
-
 .centered-text h1 {
     font-size: 40px;
     margin-bottom: 20px;
@@ -146,4 +293,13 @@ form button {
 
 .centered-text p {
     font-size: 20px;
+}
+
+/* Opportunity items */
+.opportunity {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
 }
