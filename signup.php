@@ -1,22 +1,19 @@
-<!-- Show and control layer for volunteer signup -->
-
-<!-- Show signup form -->
 <div class="container">
     <form action="" method="POST">
- 		<h1 class="signup-heading">Sign Up</h1>
+        <h1 class="signup-heading">Sign Up</h1>
+        
+        <div class="name-container">
+            <div class="input-wrapper">
+                <label for="firstname">First Name:</label>
+                <input type="text" id="firstname" name="firstname" required>
+            </div>
+            <div class="input-wrapper">
+                <label for="lastname">Last Name:</label>
+                <input type="text" id="lastname" name="lastname" required>
+            </div>
+        </div>
 
- 		<div class="name-container">
- 		<div class="input-wrapper">
- 		  <label for="firstname">First Name:</label>
- 		  <input type="text" id="firstname" name="firstname" required>
- 		</div>
- 		<div class="input-wrapper">
- 		  <label for="lastname">Last Name:</label>
- 		  <input type="text" id="lastname" name="lastname" required>
- 		</div>
-		</div>
-
-        <label for="companyname">Company Name: (Optional)</label>
+        <label for="companyname">Company Name:</label>
         <input type="text" id="companyname" name="companyname"><br>
 
         <label for="zipcode">Zipcode:</label>
@@ -34,21 +31,46 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br>
 
+        <label>Account Type:</label><br>
+        <input type="radio" id="volunteer" name="user_type" value="volunteer" required>
+        <label for="volunteer">Volunteer</label><br>
+        <input type="radio" id="organizer" name="user_type" value="organizer" required>
+        <label for="organizer">Volunteer Organizer</label><br>
+
         <button type="submit" name="submit">Sign Up</button>
 
         <p>Already have an account? <a href="?page=signin">Login</a></p>
-    </form>';
-</div>';
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const organizerRadio = document.getElementById('organizer');
+        const companyNameInput = document.getElementById('companyname');
+
+        organizerRadio.addEventListener('change', function() {
+            if (organizerRadio.checked) {
+                companyNameInput.required = true;
+            }
+        });
+
+        const volunteerRadio = document.getElementById('volunteer');
+        volunteerRadio.addEventListener('change', function() {
+            if (volunteerRadio.checked) {
+                companyNameInput.required = false;
+            }
+        });
+    });
+</script>
 
 <?php
-//When submit is pressed, the following checks are performed and variables assigned
 if (isset($_POST['submit'])) {
     $errors = ""; //reset any present errors
 
     $_SESSION['username'] = ""; //clear out username 
     $_SESSION['password'] = ""; //clear out password
-	
-	//Assign variables
+    
+    //Assign variables
     $username = $_POST['username'];
     $password = $_POST['password'];
     $firstname = $_POST['firstname'];
@@ -57,8 +79,9 @@ if (isset($_POST['submit'])) {
     $zipcode = $_POST['zipcode'];
     $phone = $_POST['phone'];
     $email = $_POST['email'];
+    $user_type = $_POST['user_type']; // Get the user type
 
-    // Input validations * MORE NECESSARY FOR REMAINING FIELDS | USER PROMPTS NEEDED
+    // Input validations (add more as needed)
     if ($username == NULL)
         $errors .= "usernameNULL";
     elseif (!preg_match("/^.{6,}$/", $username)) 
@@ -72,8 +95,8 @@ if (isset($_POST['submit'])) {
         $errors = "passwordInvalid";
     else
         $_SESSION['password'] = $password;
-	
-	//If there are errors, redirect and use the new url to show errors to the user
+    
+    // If there are errors, redirect and use the new URL to show errors to the user
     if ($errors != NULL) {
         redirect("index.php?page=signup&errMsg=$errors");
     } else {
@@ -87,27 +110,28 @@ if (isset($_POST['submit'])) {
         if (usernameExists($username, $dblink)) {
             redirect("index.php?page=signin&errMsg=usernameExists");
         } else {
-            // Insert all fields into the volunteer_accounts table
-			$sql = "INSERT INTO `volunteer_accounts` (`first_name`, `last_name`, `company_name`, `zip_code`, `phone`, `email`, `username`, `password`) 
-        			VALUES ('$firstname', '$lastname', '$companyname', '$zipcode', '$phone', '$email', '$username', '$password')";
-			
-			//Validation and redirect to login with success message
-			if ($dblink->query($sql)) {
-				echo "Data inserted successfully.";
-				redirect("index.php?page=signin&msg=registerSuccess");
-			} else {
-				echo "Error inserting data: " . $dblink->error;
-				exit();
-			}
+            // Insert all fields into the users table
+            $sql = "INSERT INTO `users` (`first_name`, `last_name`, `company_name`, `zip_code`, `phone`, `email`, `username`, `password`, `user_type`) 
+                    VALUES ('$firstname', '$lastname', '$companyname', '$zipcode', '$phone', '$email', '$username', '$password', '$user_type')";
+            
+            // Validation and redirect to login with success message
+            if ($dblink->query($sql)) {
+                // Store user type in session
+                $_SESSION['user_type'] = $user_type;
+
+                echo "Data inserted successfully.";
+                redirect("index.php?page=signin&msg=registerSuccess");
+            } else {
+                echo "Error inserting data: " . $dblink->error;
+                exit();
+            }
         }
     }
 }
 
-echo '</section>';
-
 // Function to check if username exists
 function usernameExists($username, $dblink) {
-    $query = "SELECT * FROM `volunteer_accounts` WHERE `username` = '$username'";
+    $query = "SELECT * FROM `users` WHERE `username` = '$username'";
     $result = $dblink->query($query);
     return $result->num_rows > 0;
 }

@@ -15,9 +15,11 @@ function db_connect($db) {
     return $dblink;
 }
 
-//simple redirect php function
-function redirect($uri) {
-    header("Location: $uri");
-    exit(); // Ensures no further code executes after the redirect
+function redirect ( $uri )
+{ ?>
+	<script type="text/javascript">
+		document.location.href="<?php echo $uri; ?>";
+	</script>
+<?php die;
 }
 ?>

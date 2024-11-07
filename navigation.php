@@ -11,16 +11,16 @@ $isLoggedIn = isset($_SESSION['sid']);
         <div id="dropdown">
             <span id="dropdown-icon">&#9776;</span> <!-- Hamburger icon for dropdown -->
             <div id="dropdown-content">
-                <a href="?page=find_opportunities"><button>Find Volunteer Opportunities</button></a>
-                <a href="?page=about_us"><button>About Us</button></a>
-                <a href="?page=faq"><button>FAQs</button></a>
-                <a href="?page=contact_us"><button>Contact Us</button></a>
+                <a href="index.php?page=find_opportunities"><button>Find Volunteer Opportunities</button></a>
+                <a href="index.php?page=about_us"><button>About Us</button></a>
+                <a href="index.php?page=faq"><button>FAQs</button></a>
+                <a href="index.php?page=contact_us"><button>Contact Us</button></a>
             </div>
         </div>
         
         <!-- Logo Section -->
         <div id="logo">
-            <a href="?page=home">
+            <a href="index.php?page=home">
                 <img src="images/logo.png" alt="The Logo">
             </a>
         </div>
@@ -28,19 +28,19 @@ $isLoggedIn = isset($_SESSION['sid']);
     
     <!-- Buttons Section -->
     <div id="buttons">
-        <a href="?page=signup"><button>Sign Up</button></a>
-        <a href="?page=signin"><button>Sign In</button></a>
+        <a href="index.php?page=signup"><button>Sign Up</button></a>
+        <a href="index.php?page=signin"><button>Sign In</button></a>
         
         <!-- Profile Dropdown Menu -->
         <div class="dropdown">
             <img src="./images/profile_icon.png" alt="Icon Image" id="dropdownIcon">
             <div class="dropdown-content" id="dropdownContent">
-                <a href="?page=dashboard">Dashboard</a>
-                <a href="?page=Account_Settings.php">Account Settings</a>
+                <a href="index.php?page=dashboard">Dashboard</a>
+                <a href="index.php?page=Account_Settings.php">Account Settings</a>
 				
 				<!-- Conditionally show logout button if logged in -->
                 <?php if ($isLoggedIn): ?>
-                <a href="?page=logout">Logout</a>
+                <a href="index.php?page=logout">Logout</a>
            		<?php endif; ?>
             </div>
         </div>
