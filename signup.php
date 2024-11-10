@@ -88,35 +88,54 @@ if (isset($_POST['submit'])) {
     $user_type = $_POST['user_type']; // Get the user type
 
     // Input validations (add more as needed)
-    if ($username == NULL)
+    if ($username == NULL) 
+	{
         $errors .= "usernameNULL";
-    elseif (!preg_match("/^.{6,}$/", $username)) 
-        $errors = "usernameInvalid";
+	}
+    elseif (!preg_match("/^.{6,}$/", $username))
+	{
+        $errors .= "usernameInvalid";
+	}
     else
+	{
         $_SESSION['username'] = $username;
+	}
 
+	
     if ($password == NULL)
+	{
         $errors .= "passwordNULL";
+	}
     elseif (!preg_match("/^.{6,}$/", $password)) 
-        $errors = "passwordInvalid";
+	{
+        $errors .= "passwordInvalid";
+	}
     else
+	{
         $_SESSION['password'] = $password;
+	}
+	
+	//First Name Validation
 	if ($firstname == NULL)
 	{
 		$errors .= "firstnameNULL";
 	}
     elseif (!preg_match("/^.{2,}$/", $firstname))
 	{
-		$errors = "firstnameInvalid";
+		$errors .= "firstnameInvalid";
 	}
+	
+	//Last name validation
 	if ($lastname == NULL)
 	{
-		$errors .= "firstnameNULL";
+		$errors .= "lastnameNULL";
 	}
     elseif (!preg_match("/^.{2,}$/", $lastname))
 	{
-		$errors = "lastnameInvalid";
+		$errors .= "lastnameInvalid";
 	}
+	
+	//Company Name Validation
 	if ($companyname == NULL)
 	{
 		$errors .= "companynameNULL";
@@ -124,30 +143,40 @@ if (isset($_POST['submit'])) {
 	else if (!preg_match("/^[a-zA-Z0-9\s\-\.]{2,}$/", $companyname)){
 		$errors .= "companynameInvalid";
 	}
+	
+	
     if ($zipcode == NULL) 
 	{
-    $errors .= "zipcodeNULL";
+    	$errors .= "zipcodeNULL";
 	}
 	elseif (!preg_match("/^\d{5}(-\d{4})?$/", $zipcode)){
-    $errors .= "zipcodeInvalid";
+    	$errors .= "zipcodeInvalid";
 	}
-   if ($phone == NULL) 
-   {
-    $errors .= "phoneNULL";
-   }
-elseif (!preg_match("/^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/", $phone)) {
-    $errors .= "phoneInvalid";
+	
+	
+   	if ($phone == NULL) 
+	{
+    	$errors .= "phoneNULL";
+   	}
+	elseif (!preg_match("/^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/", $phone)) {
+    	$errors .= "phoneInvalid";
 	}
-  if ($email == NULL) 
-  {
-    $errors .= "emailNULL";
-  }
-	elseif (!preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email)) {
-    $errors .= "emailInvalid";}
+	
+	
+  	if ($email == NULL) 
+  	{
+    	$errors .= "emailNULL";
+  	}
+	elseif (!preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email)) 
+	{
+    	$errors .= "emailInvalid";
+	}
+
 
     // If there are errors, redirect and use the new URL to show errors to the user
     if ($errors != NULL) {
-        redirect("index.php?page=signup&errMsg=$errors");
+        redirect("index.php?page=signup&errMsg=" . urlencode($errors));
+		
     } else {
         $username = addslashes($username);
         $passText = $password;

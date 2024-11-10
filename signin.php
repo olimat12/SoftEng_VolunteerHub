@@ -1,19 +1,6 @@
 <!-- Sign-in page show and logic -->
 
 <?php
-
-// Error checking for username, login credentials, and valid sid
-if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "usernameExists")) {
-    echo '<h2>Username already exists:</h2>';
-} 
-if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "invalidSid")) {
-    echo '<h2>Invalid session ID:</h2>';
-} 
-
-if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "invalidLogin")) {
-    echo '<h2>Invalid login credentials:</h2>';
-}
-
 // Successful registration message shown after users are redirected from signup
 if (isset($_GET['msg']) && strstr($_GET['msg'], "registerSuccess")) {
     echo '<h2>Successfully registered:</h2>';
@@ -29,6 +16,9 @@ if (!isset($_POST['submit'])) {
             <h1 class="form-heading">Sign In</h1>
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required><br>
+			<?php if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "invalidLogin")) { ?>
+    			<h2>Invalid login credentials:</h2>
+			<?php } ?>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required><br><br>
             <button type="submit" name="submit">Sign In</button><br>

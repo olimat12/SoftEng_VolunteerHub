@@ -20,9 +20,12 @@ function db_connect($db) {
 
 function redirect ( $uri )
 { ?>
-	<script type="text/javascript">
-		document.location.href="<?php echo $uri; ?>";
-	</script>
+    <script type="text/javascript">
+        document.location.href="<?php echo $uri; ?>";
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=<?php echo $uri; ?>">
+        <p>JavaScript is required for redirection. Please click <a href="<?php echo $uri; ?>">here</a> if not redirected.</p>
+    </noscript>
 <?php die;
 }
-?>
