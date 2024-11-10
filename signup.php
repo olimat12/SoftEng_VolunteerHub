@@ -1,13 +1,13 @@
-<div class="container">
+<div class="form">
     <form action="" method="POST">
-        <h1 class="signup-heading">Sign Up</h1>
+        <h1 class="form-heading">Sign Up</h1>
         
         <div class="name-container">
-            <div class="input-wrapper">
+            <div>
                 <label for="firstname">First Name:</label>
                 <input type="text" id="firstname" name="firstname" required>
             </div>
-            <div class="input-wrapper">
+            <div>
                 <label for="lastname">Last Name:</label>
                 <input type="text" id="lastname" name="lastname" required>
             </div>
@@ -29,13 +29,19 @@
         <input type="text" id="username" name="username" required><br>
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
+        <input type="password" id="password" name="password" required><br><br>
 
-        <label>Account Type:</label><br>
-        <input type="radio" id="volunteer" name="user_type" value="volunteer" required>
-        <label for="volunteer">Volunteer</label><br>
-        <input type="radio" id="organizer" name="user_type" value="organizer" required>
-        <label for="organizer">Volunteer Organizer</label><br>
+		<label>Account Type:</label><br>
+		<div class="radio-wrapper">
+			<label for="volunteer">
+				<input type="radio" id="volunteer" name="user_type" value="volunteer" required>
+				Volunteer
+			</label>
+			<label for="organizer">
+				<input type="radio" id="organizer" name="user_type" value="organizer" required>
+				Volunteer Organizer
+			</label>
+		</div><br>
 
         <button type="submit" name="submit">Sign Up</button>
 
