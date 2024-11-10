@@ -1,22 +1,6 @@
 <!-- Sign-in page show and logic -->
 
 <?php
-<<<<<<< HEAD
-=======
-
-// Error checking for username, login credentials, and valid sid
-if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "usernameExists")) {
-    echo '<h2>Username already exists:</h2>';
-} 
-if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "invalidSid")) {
-    echo '<h2>Invalid session ID:</h2>';
-} 
-
-if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "invalidLogin")) {
-    echo '<h2>Invalid login credentials:</h2>';
-}
-
->>>>>>> origin/development
 // Successful registration message shown after users are redirected from signup
 if (isset($_GET['msg']) && strstr($_GET['msg'], "registerSuccess")) {
     echo '<h2>Successfully registered:</h2>';
