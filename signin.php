@@ -5,9 +5,12 @@
 // Error checking for username, login credentials, and valid sid
 if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "usernameExists")) {
     echo '<h2>Username already exists:</h2>';
-} elseif (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "invalidSid")) {
+} 
+if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "invalidSid")) {
     echo '<h2>Invalid session ID:</h2>';
-} elseif (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "invalidLogin")) {
+} 
+
+if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "invalidLogin")) {
     echo '<h2>Invalid login credentials:</h2>';
 }
 
