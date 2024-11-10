@@ -95,7 +95,50 @@ if (isset($_POST['submit'])) {
         $errors = "passwordInvalid";
     else
         $_SESSION['password'] = $password;
-    
+	if ($firstname == NULL)
+	{
+		$errors .= "firstnameNULL";
+	}
+    elseif (!preg_match("/^.{2,}$/", $firstname))
+	{
+		$errors = "firstnameInvalid";
+	}
+	if ($lastname == NULL)
+	{
+		$errors .= "firstnameNULL";
+	}
+    elseif (!preg_match("/^.{2,}$/", $lastname))
+	{
+		$errors = "lastnameInvalid";
+	}
+	if ($companyname == NULL)
+	{
+		$errors .= "companynameNULL";
+	}
+	else if (!preg_match("/^[a-zA-Z0-9\s\-\.]{2,}$/", $companyname)){
+		$errors .= "companynameInvalid";
+	}
+    if ($zipcode == NULL) 
+	{
+    $errors .= "zipcodeNULL";
+	}
+	elseif (!preg_match("/^\d{5}(-\d{4})?$/", $zipcode)){
+    $errors .= "zipcodeInvalid";
+	}
+   if ($phone == NULL) 
+   {
+    $errors .= "phoneNULL";
+   }
+elseif (!preg_match("/^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/", $phone)) {
+    $errors .= "phoneInvalid";
+	}
+  if ($email == NULL) 
+  {
+    $errors .= "emailNULL";
+  }
+	elseif (!preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $email)) {
+    $errors .= "emailInvalid";}
+
     // If there are errors, redirect and use the new URL to show errors to the user
     if ($errors != NULL) {
         redirect("index.php?page=signup&errMsg=$errors");

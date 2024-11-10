@@ -11,8 +11,11 @@
 <file name="signin.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133753869484967107" remote="133753869480000000" Dst="1" />
 <file name="functions.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133753869361446640" remote="133753869360000000" Dst="1" />
 <file name="navigation.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133753861002860688" remote="133753861000000000" Dst="1" />
-<file name="signup.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133753852280816641" remote="133753852280000000" Dst="1" />
+<file name="signup.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133757042395640887" remote="133757042430000000" Dst="1" />
 <file name="home.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133748714295719351" remote="133748750610000000" Dst="1" />
 <file name="logout.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133748714295729349" remote="133748750630000000" Dst="1" />
 <file name="find_opportunities.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133748714295709349" remote="133748772740000000" Dst="1" />
+<file name="account_settings.html" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133734942400000000" remote="133734942400000000" Dst="1" />
+<file name="index.nginx-debian.html" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133734921600000000" remote="133734921600000000" Dst="1" />
+<file name="find_volunteer_opportunities.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133748750610000000" remote="133748750610000000" Dst="1" />
 </dwsync>
