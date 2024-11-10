@@ -59,6 +59,9 @@ include("functions.php");
             case "logout":
                 include("logout.php");
                 break;
+            case "post_event":
+                include("post_event.php");
+                break;
             default:
                 include("home.php");
                 break;

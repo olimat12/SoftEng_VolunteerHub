@@ -12,6 +12,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+	background-color:#E5E5E5;
 }
 
 #logo-dropdown-container {
@@ -88,19 +89,6 @@ body {
     font-weight: normal;
     font-size: 14px;
     cursor: pointer;
-}
-
-/* Container layout */
-.container {
-    position: relative;
-    width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
 }
 
 /* Centered text for headers */
@@ -212,7 +200,7 @@ footer {
     width: 100%;
 }
 
-/* Signup form styles */
+/* Signup form heading */
 .signup-heading {
     text-align: center;
     color: #140650;
@@ -220,6 +208,12 @@ footer {
     margin-bottom: 20px;
 }
 
+/* Signin form styles */
+.signin input {
+	width: 50%;
+}
+
+/* General form styles */
 form {
     text-align: center;
     background: #7CC623;
@@ -254,6 +248,19 @@ form button {
     cursor: pointer;
 }
 
+/* Signup form styles */
+.form-heading {
+    text-align: center;
+    color: #140650;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Signin form styles */
+.signin input {
+	width: 50%;
+}
+
 /* Name input container styling */
 .name-container {
     display: flex;
@@ -271,7 +278,7 @@ form button {
 }
 
 .input-wrapper input {
-    width: 100%;
+    width: 50%;
 }
 
 /* Home page background */
@@ -303,3 +310,26 @@ form button {
     border-radius: 8px;
     font-size: 14px;
 }
+
+.radio-wrapper {
+    display: flex; /* Horizontal alignment for radio buttons */
+    flex-direction: row; /* Ensure inline layout */
+    gap: 20px; /* Add spacing between the two radio options */
+    align-items: center; /* Vertically align the radio buttons with their text */
+    justify-content: center; /* Center the radio buttons horizontally */
+    width: 100%; /* Ensure the wrapper spans the full container width */
+    margin: 0 auto; /* Center the wrapper within its container */
+}
+
+.radio-wrapper label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.radio-wrapper input[type="radio"] {
+    margin: 0;
+}
+
+

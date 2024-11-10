@@ -1,11 +1,13 @@
 <?php
 
-//function to connect to database
 function db_connect($db) {
-    $dbusername = "root";
-    $dbpassword = "cs3773group2";
-    $host = "localhost";
+    $dbusername = "webuser";
+    $dbpassword = "VolHub123!";
+    $host = "localhost"; // Replace with your EC2 IP or hostname
     $dblink = new mysqli($host, $dbusername, $dbpassword, $db);
+
+    // Enable SSL for the connection
+    $dblink->ssl_set(NULL, NULL, '/etc/mysql/ssl/ca-cert.pem', NULL, NULL);
 
     // Check connection
     if ($dblink->connect_error) {
@@ -14,6 +16,7 @@ function db_connect($db) {
 
     return $dblink;
 }
+
 
 function redirect ( $uri )
 { ?>

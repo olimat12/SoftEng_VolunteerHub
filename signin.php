@@ -21,14 +21,14 @@ if (isset($_GET['msg']) && strstr($_GET['msg'], "registerSuccess")) {
 // If the form is not submitted, show the input boxes
 if (!isset($_POST['submit'])) {
 ?>
-    <div class="container">
+    <div class="signin">
         <form action="" method="POST">
-            <h1 class="signin-heading">Sign In</h1>
+            <h1 class="form-heading">Sign In</h1>
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required><br>
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br>
-            <button type="submit" name="submit">Sign In</button>
+            <input type="password" id="password" name="password" required><br><br>
+            <button type="submit" name="submit">Sign In</button><br>
             <p>New to Volunteer Hub? <a href="signup.php">Join Today</a></p>
         </form>
     </div>
