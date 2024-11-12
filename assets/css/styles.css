@@ -332,4 +332,16 @@ form button {
     margin: 0;
 }
 
+.input-error-feedback {
+    color: red !important;       /* Set the text color to red */
+    font-size: 0.6em !important; /* Adjust the font size to make it smaller */
+    margin: 0 !important;        /* Remove default margin for cleaner layout */
+    font-weight: bold !important; /* (Optional) Make the text bold for emphasis */
+}
+
+.success-prompt {
+	text-align: center;
+}
+
+
 

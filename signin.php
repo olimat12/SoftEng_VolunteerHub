@@ -2,10 +2,9 @@
 
 <?php
 // Successful registration message shown after users are redirected from signup
-if (isset($_GET['msg']) && strstr($_GET['msg'], "registerSuccess")) {
-    echo '<h2>Successfully registered:</h2>';
-}
-?>
+if (isset($_GET['msg']) && strstr($_GET['msg'], "registerSuccess")) { ?>
+    <h2 class="success-prompt">Successfully registered, please sign in:</h2>
+<?php } ?>
 
 <?php
 // If the form is not submitted, show the input boxes
