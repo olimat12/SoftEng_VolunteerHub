@@ -48,9 +48,11 @@ if (isset($_POST['submit'])) {
         // Successful login, fetch user type
         $row = $result->fetch_assoc();
         $user_type = $row['user_type'];
+		$user_id   = $row['id'];
 
         // Store user type in session
         $_SESSION['user_type'] = $user_type;
+		$_SESSION['user_id']   = $user_id;
 
         // Generate a new session ID
         $salt = microtime();
