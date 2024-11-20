@@ -1,6 +1,11 @@
 <?php
 //include dblink and redirect functions used by most pages
-include("functions.php");
+if (file_exists("functions.php")) {
+    include("functions.php");
+} else {
+    die("functions.php not found. Check the file path.<br>");
+}
+
 ?>
 
 <!DOCTYPE html>

@@ -31,7 +31,6 @@ if (!isset($_POST['submit'])) {
 <?php
 // If the form is submitted, perform the following checks and input data into the database
 if (isset($_POST['submit'])) {
-    session_start(); // Start the session
     $username = addslashes($_POST['username']);
     $passText = $_POST['password'];
     $salt = "saltoftheearth";

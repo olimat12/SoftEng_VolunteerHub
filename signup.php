@@ -119,6 +119,7 @@ if (isset($_POST['submit'])) {
 	$_SESSION['zipcode'] 	 = "";
 	$_SESSION['phone'] 		 = "";
 	$_SESSION['email'] 		 = "";
+	$_SESSION['user_type']   = "";
 	 
 	$username 	 =$_POST['username'];
 	$password	 =$_POST['password'];
@@ -128,6 +129,7 @@ if (isset($_POST['submit'])) {
 	$zipcode	 =$_POST['zipcode'];
 	$phone	     =$_POST['phone'];
 	$email       =$_POST['email'];
+	$user_type   =$_POST['user_type'];
 
 	
     // Input validations username

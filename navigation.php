@@ -1,9 +1,12 @@
 <?php
 //Whenever navigation is used, a new session is created only if one does not already exist. Content is conditionally shown based on SESSION variables.
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 $isLoggedIn = isset($_SESSION['sid']);
 ?>
+
 
 <div id="header">
     <div id="logo-dropdown-container">

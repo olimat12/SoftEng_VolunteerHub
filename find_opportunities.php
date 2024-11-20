@@ -1,111 +1,170 @@
-    <div id="header">
-        <div id="logo-dropdown-container">
-            <div id="dropdown">
-                <span id="dropdown-icon">&#9776;</span>
-                <div id="dropdown-content">
-                    <a href="./find_volunteer_opportunities.html"><button>Find Volunteer Opportunities</button></a>
-                    <a href="./about_us.html"><button>About Us</button></a>
-                    <a href="./faq.html"><button>FAQs</button></a>
-                    <a href="./contact_us.html"><button>Contact Us</button></a>
-                </div>
-            </div>
-            <div id="logo">
-                <a href="index.html">
-                    <img src="images/logo.png" alt="The Logo">
-                </a>
-            </div>
-        </div>
-        <div id="buttons">
-            <a href="./signup.html"><button>Sign Up</button></a>
-            <a href="./signin.html"><button>Sign In</button></a>
-            <div class="dropdown">
-                <img src="./images/profile_icon.png" alt="Icon Image" id="dropdownIcon">
-                <div class="dropdown-content" id="dropdownContent">
-                    <a href="./dashboard.html">Dashboard</a>
-                    <a href="./Account_Settings.html">Account Settings</a>
-                    <a href="./logout.html">Logout</a>
-                </div>
-            </div>
-        </div>
-        
-    </div>
+<?php
 
-    <div class="container">
-        <div class="centered-text">
-            <h3>Find Volunteer Opportunity</h3>
-            <!-- Add the green area around the search containers -->
-            <div class="green-area">
-                <div class="search-container">
-                    <input type="text" id="keyword" name="keyword" placeholder="Search by keyword / organization name">
-                    <input type="text" id="city" name="city" placeholder="Search by city / zipcode">
-                </div>
-                <div class="search-container">
-                    <select id="sort-by" name="sort-by">
-                        <option value="zipcode">Sort by Zipcode</option>
-                        <option value="date">Sort by Date</option>
-                        <option value="organization">Sort by Organization</option>
-                    </select>
-                    <select id="filter-by" name="filter-by">
-                        <option value="zipcode">Filter by Zipcode</option>
-                        <option value="date">Filter by Date</option>
-                        <option value="organization">Filter by Organization</option>
-                    </select>
-                    <button type="button" class="search-button">Search</button>
-                </div>
-            </div>
-            <!-- Results Area -->
-<!-- Results Area -->
-<div class="results-area">
-    <div class="opportunity">
-        <p><strong>Event Name:</strong> Volunteer at Local Shelter</p>
-        <p><strong>Organization:</strong> Community Outreach Center</p>
-        <p><strong>Task:</strong> Serving food to the homeless</p>
-        <p><strong>Date:</strong> April 15, 2024</p>
-        <p><strong>Time:</strong> 9:00 AM - 12:00 PM</p>
-        <p><strong>Location:</strong> New York, NY 10001</p>
-        <button type="button" class="search-button">Register</button>
-    </div>
-    <div class="opportunity">
-        <p><strong>Event Name:</strong> Community Clean-up Day</p>
-        <p><strong>Organization:</strong> Green Earth Foundation</p>
-        <p><strong>Task:</strong> Collecting trash in the community</p>
-        <p><strong>Date:</strong> April 20, 2024</p>
-        <p><strong>Time:</strong> 10:00 AM - 2:00 PM</p>
-        <p><strong>Location:</strong> Los Angeles, CA 90001</p>
-        <button type="button" class="search-button">Register</button>
-    </div>
-    <div class="opportunity">
-        <p><strong>Event Name:</strong> Food Drive for the Homeless</p>
-        <p><strong>Organization:</strong> Helping Hands Charity</p>
-        <p><strong>Task:</strong> Collecting and distributing food items</p>
-        <p><strong>Date:</strong> May 1, 2024</p>
-        <p><strong>Time:</strong> 11:00 AM - 3:00 PM</p>
-        <p><strong>Location:</strong> Chicago, IL 60601</p>
-        <button type="button" class="search-button">Register</button>
-    </div>
-    <div class="opportunity">
-        <p><strong>Event Name:</strong> Tutoring Session for Underprivileged Children</p>
-        <p><strong>Organization:</strong> Education for All</p>
-        <p><strong>Task:</strong> Providing academic support to children</p>
-        <p><strong>Date:</strong> May 10, 2024</p>
-        <p><strong>Time:</strong> 3:00 PM - 5:00 PM</p>
-        <p><strong>Location:</strong> Houston, TX 77001</p>
-        <button type="button" class="search-button">Register</button>
-    </div>
-    <div class="opportunity">
-        <p><strong>Event Name:</strong> Beach Cleanup Project</p>
-        <p><strong>Organization:</strong> Ocean Conservation Society</p>
-        <p><strong>Task:</strong> Cleaning up litter from the beach</p>
-        <p><strong>Date:</strong> May 20, 2024</p>
-        <p><strong>Time:</strong> 8:00 AM - 11:00 AM</p>
-        <p><strong>Location:</strong> Miami, FL 33101</p>
-        <button type="button" class="search-button">Register</button>
-    </div>
-</div>
+require_once 'functions.php'; // Include the functions.php file to ensure db_connect is available
 
-       
-        </div>
-    </div>
-</body>
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-</html>
+// Ensure user is logged in as a volunteer
+if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'volunteer') {
+    die("Access denied. You must be logged in as a volunteer.");
+}
+
+// Connect to the database
+$dblink = db_connect("volunteerhub");
+if (!$dblink) {
+    die("Database connection failed: " . mysqli_connect_error());
+}
+
+// Handle signup and unregister logic
+if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_REQUEST['opportunity_id'], $_REQUEST['action'])) {
+    $opportunity_id = (int)$_REQUEST['opportunity_id'];
+    $volunteer_id = $_SESSION['user_id'];
+    $action = $_REQUEST['action'];
+
+    if ($action === 'signup') {
+        // Check if the user is already signed up for the opportunity
+        $sql_check_signup = "SELECT * FROM volunteer_signup WHERE opportunity_id = ? AND volunteer_id = ?";
+        $stmt_check_signup = $dblink->prepare($sql_check_signup);
+        if (!$stmt_check_signup) {
+            die("Signup check query preparation failed: " . $dblink->error);
+        }
+        $stmt_check_signup->bind_param("ii", $opportunity_id, $volunteer_id);
+        $stmt_check_signup->execute();
+        $result_check_signup = $stmt_check_signup->get_result();
+        if ($result_check_signup->num_rows > 0) {
+            echo "<p style='color: red;'>You are already signed up for this opportunity.</p>";
+            echo "<script type='text/javascript'>setTimeout(function() { window.location.href = 'index.php?page=find_opportunities'; }, 2000);</script>";
+            exit;
+        }
+
+        // Check if the opportunity exists and is not full
+        $sql = "
+            SELECT o.needed_volunteers, COUNT(vs.id) AS signed_up_count
+            FROM opportunities o
+            LEFT JOIN volunteer_signup vs ON o.id = vs.opportunity_id
+            WHERE o.id = ?
+            GROUP BY o.id;
+        ";
+        $stmt = $dblink->prepare($sql);
+        if (!$stmt) {
+            die("Query preparation failed: " . $dblink->error);
+        }
+        $stmt->bind_param("i", $opportunity_id);
+        if (!$stmt->execute()) {
+            die("Query execution failed: " . $stmt->error);
+        }
+        $result = $stmt->get_result();
+        if (!$result) {
+            die("Error fetching opportunity: " . $stmt->error);
+        }
+
+        if ($result->num_rows === 0) {
+            echo "<p style='color: red;'>Opportunity not found.</p>";
+        } else {
+            $row = $result->fetch_assoc();
+            if ($row['signed_up_count'] >= $row['needed_volunteers']) {
+                echo "<p style='color: red;'>The opportunity is full. Cannot sign up.</p>";
+            } else {
+                $sql_signup = "INSERT INTO volunteer_signup (opportunity_id, volunteer_id) VALUES (?, ?)";
+                $stmt_signup = $dblink->prepare($sql_signup);
+                if (!$stmt_signup) {
+                    die("Signup query preparation failed: " . $dblink->error);
+                }
+                $stmt_signup->bind_param("ii", $opportunity_id, $volunteer_id);
+                if (!$stmt_signup->execute()) {
+                    die("Signup query execution failed: " . $stmt_signup->error);
+                }
+                echo "<p style='color: green;'>Successfully signed up for opportunity.</p>";
+            }
+        }
+        echo "<script type='text/javascript'>setTimeout(function() { window.location.href = 'index.php?page=find_opportunities'; }, 2000);</script>";
+        exit;
+    } elseif ($action === 'unregister') {
+        // Check if the record exists before deleting
+        $sql_check = "SELECT * FROM volunteer_signup WHERE opportunity_id = ? AND volunteer_id = ?";
+        $stmt_check = $dblink->prepare($sql_check);
+        if (!$stmt_check) {
+            die("Check query preparation failed: " . $dblink->error);
+        }
+        $stmt_check->bind_param("ii", $opportunity_id, $volunteer_id);
+        if (!$stmt_check->execute()) {
+            die("Check query execution failed: " . $stmt_check->error);
+        }
+        $result_check = $stmt_check->get_result();
+        if ($result_check->num_rows === 0) {
+            echo "<p style='color: red;'>No matching record found to unregister.</p>";
+        } else {
+            $sql = "DELETE FROM volunteer_signup WHERE opportunity_id = ? AND volunteer_id = ?";
+            $stmt = $dblink->prepare($sql);
+            if (!$stmt) {
+                die("Unregister query preparation failed: " . $dblink->error);
+            }
+            $stmt->bind_param("ii", $opportunity_id, $volunteer_id);
+            if (!$stmt->execute()) {
+                die("Unregister query execution failed: " . $stmt->error);
+            } else {
+                echo "<p style='color: green;'>Successfully unregistered from opportunity.</p>";
+            }
+        }
+        echo "<script type='text/javascript'>setTimeout(function() { window.location.href = 'index.php?page=find_opportunities'; }, 2000);</script>";
+        exit;
+    } else {
+        echo "<p style='color: red;'>Invalid action specified.</p>";
+    }
+} 
+
+// Fetch and display opportunities with current sign-up count
+$sql = "
+    SELECT o.id, o.title, o.description, o.needed_volunteers, COUNT(vs.id) AS signed_up_count
+    FROM opportunities o
+    LEFT JOIN volunteer_signup vs ON o.id = vs.opportunity_id
+    GROUP BY o.id;
+";
+$result = $dblink->query($sql);
+?>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Opportunity ID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Signed Up / Needed Volunteers</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if ($result && $result->num_rows > 0): ?>
+            <?php while ($row = $result->fetch_assoc()): ?>
+                <tr>
+                    <td><?php echo $row['id']; ?></td>
+                    <td><?php echo $row['title']; ?></td>
+                    <td><?php echo $row['description']; ?></td>
+                    <td><?php echo $row['signed_up_count'] . " / " . $row['needed_volunteers']; ?></td>
+                    <td>
+                        <form method="POST" action="find_opportunities.php">
+                            <input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
+                            <input type="hidden" name="action" value="signup">
+                            <button type="submit">Sign Up</button>
+                        </form>
+                        <form method="POST" action="find_opportunities.php">
+                            <input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
+                            <input type="hidden" name="action" value="unregister">
+                            <button type="submit">Unregister</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <tr><td colspan="5">No opportunities available</td></tr>
+        <?php endif; ?>
+    </tbody>
+</table>
+
+
+
+
+
+
