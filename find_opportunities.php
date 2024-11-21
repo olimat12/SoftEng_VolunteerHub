@@ -6,6 +6,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+$volunteer_id = $_SESSION['user_id'];
+
 // Ensure user is logged in as a volunteer
 if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'volunteer') {
     die("Access denied. You must be logged in as a volunteer.");
@@ -20,7 +22,6 @@ if (!$dblink) {
 // Handle signup and unregister logic
 if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_REQUEST['opportunity_id'], $_REQUEST['action'])) {
     $opportunity_id = (int)$_REQUEST['opportunity_id'];
-    $volunteer_id = $_SESSION['user_id'];
     $action = $_REQUEST['action'];
 
     if ($action === 'signup') {
@@ -115,22 +116,34 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_REQUEST['opportunity_id']
     }
 } 
 
-// Fetch and display opportunities with current sign-up count
+// Fetch and display opportunities with current sign-up count and check if the user is signed up
 $sql = "
-    SELECT o.id, o.title, o.description, o.needed_volunteers, COUNT(vs.id) AS signed_up_count
+    SELECT o.id, o.title, o.description, o.needed_volunteers, COUNT(vs.id) AS signed_up_count, 
+           o.datetime_start, o.datetime_end, u.company_name,
+           EXISTS(SELECT 1 FROM volunteer_signup vs2 WHERE vs2.opportunity_id = o.id AND vs2.volunteer_id = ?) AS is_signed_up
     FROM opportunities o
     LEFT JOIN volunteer_signup vs ON o.id = vs.opportunity_id
-    GROUP BY o.id;
+    LEFT JOIN users u ON o.organizer_id = u.id
+    GROUP BY o.id
 ";
-$result = $dblink->query($sql);
+$stmt = $dblink->prepare($sql);
+if (!$stmt) {
+    die("Query preparation failed: " . $dblink->error);
+}
+$stmt->bind_param("i", $volunteer_id);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
+<h2 class="centered-text">CSS Styling in Progress</h2>
 <table border="1">
     <thead>
         <tr>
             <th>Opportunity ID</th>
+            <th>Organizer Name</th>
             <th>Title</th>
             <th>Description</th>
+            <th>Start Time / End Time</th>
             <th>Signed Up / Needed Volunteers</th>
             <th>Actions</th>
         </tr>
@@ -139,30 +152,34 @@ $result = $dblink->query($sql);
         <?php if ($result && $result->num_rows > 0): ?>
             <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
-                    <td><?php echo $row['id']; ?></td>
-                    <td><?php echo $row['title']; ?></td>
-                    <td><?php echo $row['description']; ?></td>
-                    <td><?php echo $row['signed_up_count'] . " / " . $row['needed_volunteers']; ?></td>
+                    <td><?php echo ($row['id']); ?></td>
+                    <td><?php echo ($row['company_name']); ?></td>
+                    <td><?php echo ($row['title']); ?></td>
+                    <td><?php echo ($row['description']); ?></td>
+                    <td><?php echo ($row['datetime_start'] . " / " . $row['datetime_end']); ?></td>
+                    <td><?php echo ($row['signed_up_count'] . " / " . $row['needed_volunteers']); ?></td>
                     <td>
-                        <form method="POST" action="find_opportunities.php">
-                            <input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
-                            <input type="hidden" name="action" value="signup">
-                            <button type="submit">Sign Up</button>
-                        </form>
-                        <form method="POST" action="find_opportunities.php">
-                            <input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
-                            <input type="hidden" name="action" value="unregister">
-                            <button type="submit">Unregister</button>
-                        </form>
+                        <?php if ($row['is_signed_up']): ?>
+                            <form class="opportunity-form" method="POST" action="find_opportunities.php">
+                                <input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
+                                <input type="hidden" name="action" value="unregister">
+                                <button type="submit">Unregister</button>
+                            </form>
+                        <?php else: ?>
+                            <form class="opportunity-form" method="POST" action="find_opportunities.php">
+                                <input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
+                                <input type="hidden" name="action" value="signup">
+                                <button type="submit">Sign Up</button>
+                            </form>
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endwhile; ?>
         <?php else: ?>
-            <tr><td colspan="5">No opportunities available</td></tr>
+            <tr><td colspan="7">No opportunities available</td></tr>
         <?php endif; ?>
     </tbody>
 </table>
-
 
 
 

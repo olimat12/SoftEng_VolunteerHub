@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <div class="container">
         <div class="centered-text">
-
+			
+			<h2> WORK IN PROGRESS </h2>
             <h3>Registered Volunteer Engagements</h3>
 
             <div class="results-area">
@@ -42,11 +36,3 @@
 
         </div>
     </div>
-
-    <footer>
-        &copy; 2024 Volunteer Hub. All rights reserved.
-    </footer>
-
-</body>
-
-</html>

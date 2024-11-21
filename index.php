@@ -67,6 +67,9 @@ if (file_exists("functions.php")) {
             case "post_event":
                 include("post_event.php");
                 break;
+			case "account_settings":
+                include("account_settings.php");
+                break;
             default:
                 include("home.php");
                 break;

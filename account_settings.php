@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | Volunteer Hub</title>
+    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <style>
         body {
@@ -268,45 +263,8 @@
             width: 100%;
         }
     </style>
-</head>
-
-<body>
-
-    <div id="header">
-        <div class="container">
-            <div id="logo-dropdown-container">
-                <div id="dropdown">
-                    <span id="dropdown-icon">&#9776;</span>
-                    <div id="dropdown-content">
-                        <a href="./find_volunteer_opportunities.html"><button>Find Volunteer Opportunities</button></a>
-                        <a href="./about_us.html"><button>About Us</button></a>
-                        <a href="./faq.html"><button>FAQs</button></a>
-                        <a href="./contact_us.html"><button>Contact Us</button></a>
-                    </div>
-                </div>
-                <div id="logo">
-                    <a href="index.html">
-                        <img src="images/logo.png" alt="The Logo">
-                    </a>
-                </div>
-            </div>
-            <div id="buttons">
-            <a href="./signup.html"><button>Sign Up</button></a>
-            <a href="./signin.html"><button>Sign In</button></a>
-            <div class="dropdown">
-                <img src="./images/profile_icon.png" alt="Icon Image" id="dropdownIcon">
-                <div class="dropdown-content" id="dropdownContent">
-                    <a href="./dashboard.html">Dashboard</a>
-                    <a href="./settings.html">Settings</a>
-                    <a href="./logout.html">Logout</a>
-                </div>
-            </div>
-            </div>
-        </div>
-    </div>
-
+	<h2>WORK IN PROGRESS</h2>
     <div class="container">
-
         <form>
             <div class="profile-picture-container">
                 <div class="profile-picture">
@@ -366,11 +324,3 @@
 
         
     </div>
-
-    <footer>
-        &copy; 2024 Volunteer Hub. All rights reserved.
-    </footer>
-
-</body>
-
-</html>

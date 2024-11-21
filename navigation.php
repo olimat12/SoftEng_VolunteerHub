@@ -7,7 +7,6 @@ if (session_status() === PHP_SESSION_NONE) {
 $isLoggedIn = isset($_SESSION['sid']);
 ?>
 
-
 <div id="header">
     <div id="logo-dropdown-container">
         <!-- Dropdown Menu for links to static content pages -->
@@ -47,7 +46,7 @@ $isLoggedIn = isset($_SESSION['sid']);
             <div class="dropdown-content" id="dropdownContent">
 				<?php if ($isLoggedIn): ?>
                 	<a href="index.php?page=dashboard">Dashboard</a>
-                	<a href="index.php?page=Account_Settings.php">Account Settings</a>
+                	<a href="index.php?page=account_settings">Account Settings</a>
 					<a href="index.php?page=logout">Logout</a>
 				<?php else: ?>
 					<a href="index.php?page=signin">Sign In</a>

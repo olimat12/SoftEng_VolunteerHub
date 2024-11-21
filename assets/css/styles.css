@@ -343,5 +343,40 @@ form button {
 	text-align: center;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+    background-color: whitesmoke;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
+thead th {
+    background-color: #7CC623;
+    color: #ffffff;
+    padding: 12px;
+	text-align: center;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tbody tr:hover {
+    background-color: #e9f5e9;
+}
+
+th, td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+	text-align: center;
+	vertical-align: middle;
+}
+
+form.opportunity-form {
+    margin: 0; /* Remove the margin for forms in the table */
+    display: inline-block; /* Ensures forms are treated as inline elements */
+}
 
