@@ -135,7 +135,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 ?>
 
-<h2 class="centered-text">CSS Styling in Progress</h2>
+<h2 class="centered-text">Available Opportunities</h2>
 <table border="1">
     <thead>
         <tr>
