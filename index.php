@@ -14,7 +14,7 @@ if (file_exists("functions.php")) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | Volunteer Hub</title>
+    <title>Volunteer Hub</title>
     
     <!-- Link to external stylesheet -->
     <link rel="stylesheet" href="assets/css/styles.css">

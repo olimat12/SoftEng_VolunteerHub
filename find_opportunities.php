@@ -77,7 +77,7 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_REQUEST['opportunity_id']
                 if (!$stmt_signup->execute()) {
                     die("Signup query execution failed: " . $stmt_signup->error);
                 }
-                echo "<p style='color: green;'>Successfully signed up for opportunity.</p>";
+                echo "<p style='color: green;'>PLACEHOLDER: Successfully signed up for opportunity.</p>";
             }
         }
         echo "<script type='text/javascript'>setTimeout(function() { window.location.href = 'index.php?page=find_opportunities'; }, 2000);</script>";
@@ -106,7 +106,7 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_REQUEST['opportunity_id']
             if (!$stmt->execute()) {
                 die("Unregister query execution failed: " . $stmt->error);
             } else {
-                echo "<p style='color: green;'>Successfully unregistered from opportunity.</p>";
+                echo "<p style='color: green;'>PLACEHOLDER: Successfully unregistered from opportunity.</p>";
             }
         }
         echo "<script type='text/javascript'>setTimeout(function() { window.location.href = 'index.php?page=find_opportunities'; }, 2000);</script>";
@@ -119,7 +119,7 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_REQUEST['opportunity_id']
 // Fetch and display opportunities with current sign-up count and check if the user is signed up
 $sql = "
     SELECT o.id, o.title, o.description, o.needed_volunteers, COUNT(vs.id) AS signed_up_count, 
-           o.datetime_start, o.datetime_end, u.company_name,
+           o.datetime_start, o.datetime_end, u.company_name, o.location,
            EXISTS(SELECT 1 FROM volunteer_signup vs2 WHERE vs2.opportunity_id = o.id AND vs2.volunteer_id = ?) AS is_signed_up
     FROM opportunities o
     LEFT JOIN volunteer_signup vs ON o.id = vs.opportunity_id
@@ -143,6 +143,7 @@ $result = $stmt->get_result();
             <th>Organizer Name</th>
             <th>Title</th>
             <th>Description</th>
+			<th>Location</th>
             <th>Start Time / End Time</th>
             <th>Signed Up / Needed Volunteers</th>
             <th>Actions</th>
@@ -156,6 +157,7 @@ $result = $stmt->get_result();
                     <td><?php echo ($row['company_name']); ?></td>
                     <td><?php echo ($row['title']); ?></td>
                     <td><?php echo ($row['description']); ?></td>
+					<td><?php echo ($row['location']); ?></td>
                     <td><?php echo ($row['datetime_start'] . " / " . $row['datetime_end']); ?></td>
                     <td><?php echo ($row['signed_up_count'] . " / " . $row['needed_volunteers']); ?></td>
                     <td>
