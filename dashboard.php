@@ -1,291 +1,205 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | Volunteer Hub</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-    <style>
-        body {
-            margin: 20px; /* Add margin from all sides of the page */
-            padding: 0;
-            background: whitesmoke;
-            background-size: cover;
-            font-family: 'Roboto', Arial, sans-serif;
+require_once 'functions.php'; // Include the functions.php file to ensure db_connect is available
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$user_type = $_SESSION['user_type'];
+$user_id = $_SESSION['user_id'];
+
+// Ensure user is logged in
+if (!isset($user_type)) {
+    die("Access denied. You must be logged in.");
+}
+
+// Connect to the database
+$dblink = db_connect("volunteerhub");
+if (!$dblink) {
+    die("Database connection failed: " . mysqli_connect_error());
+}
+
+// Handle delete opportunity logic for organizers
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['opportunity_id'], $_POST['action']) && $_POST['action'] === 'delete') {
+    $opportunity_id = (int)$_POST['opportunity_id'];
+    if ($user_type === 'organizer') {
+        // Delete the opportunity
+        $sql_delete = "DELETE FROM opportunities WHERE id = ? AND organizer_id = ?";
+        $stmt_delete = $dblink->prepare($sql_delete);
+        if (!$stmt_delete) {
+            die("Delete query preparation failed: " . $dblink->error);
         }
-
-        #header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        $stmt_delete->bind_param("ii", $opportunity_id, $user_id);
+        if (!$stmt_delete->execute()) {
+            die("Delete query execution failed: " . $stmt_delete->error);
+        } else {
+            echo "<p style='color: green;'>Successfully deleted opportunity.</p>";
         }
+    }
+}
+?>
 
-        #logo-dropdown-container {
-            display: flex;
-            align-items: center;
+<?php
+// Fetch company name if the user is an organizer
+$company_name = '';
+if ($user_type === 'organizer') {
+    $company_sql = "SELECT company_name FROM users WHERE id = ?";
+    $company_stmt = $dblink->prepare($company_sql);
+    if ($company_stmt) {
+        $company_stmt->bind_param("i", $user_id);
+        $company_stmt->execute();
+        $company_result = $company_stmt->get_result();
+        if ($company_result && $company_result->num_rows > 0) {
+            $company_row = $company_result->fetch_assoc();
+            $company_name = $company_row['company_name'];
         }
+    }
+}
+?>
 
-        #logo img {
-            max-width: 100%;
-            height: auto;
-            margin-right: 10px; /* Add margin to create space between the logo and the dropdown icon */
-        }
+<h2 class="centered-text">Dashboard <?php echo $company_name ? "- " . htmlspecialchars($company_name) : ""; ?></h2>
 
-        #dropdown-icon {
-            cursor: pointer;
-            font-size: 24px;
-            color: #140650;
-        }
+<?php if ($user_type === 'volunteer'): ?>
+    <h3>Opportunities You've Signed Up For</h3>
+    <?php
+    $sql = "
+        SELECT o.id, o.title, o.description, o.location, o.datetime_start, o.datetime_end, u.company_name
+        FROM opportunities o
+        LEFT JOIN users u ON o.organizer_id = u.id
+        INNER JOIN volunteer_signup vs ON o.id = vs.opportunity_id
+        WHERE vs.volunteer_id = ?
+    ";
+    $stmt = $dblink->prepare($sql);
+    if (!$stmt) {
+        die("Query preparation failed: " . $dblink->error);
+    }
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    ?>
 
-        #dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-            z-index: 1;
-        }
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Opportunity ID</th>
+                <th>Organizer Name</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Start Time / End Time</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($result && $result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo ($row['id']); ?></td>
+                        <td><?php echo ($row['company_name']); ?></td>
+                        <td><?php echo ($row['title']); ?></td>
+                        <td><?php echo ($row['description']); ?></td>
+                        <td><?php echo ($row['location']); ?></td>
+                        <td><?php echo ($row['datetime_start'] . " / " . $row['datetime_end']); ?></td>
+                        <td>
+                            <form class="opportunity-form" method="POST" action="find_opportunities.php">
+                                <input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
+                                <input type="hidden" name="action" value="unregister">
+                                <button type="submit">Unregister</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr><td colspan="7">You have not signed up for any opportunities.</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
 
-        #dropdown:hover #dropdown-content {
-            display: block;
-        }
+<?php elseif ($user_type === 'organizer'): ?>
+    <h3>Opportunities You've Posted</h3>
+    <?php
+    $sql = "
+        SELECT o.id, o.title, o.description, o.location, o.datetime_start, o.datetime_end, COUNT(vs.id) AS signed_up_count, o.needed_volunteers
+        FROM opportunities o
+        LEFT JOIN volunteer_signup vs ON o.id = vs.opportunity_id
+        WHERE o.organizer_id = ?
+        GROUP BY o.id
+    ";
+    $stmt = $dblink->prepare($sql);
+    if (!$stmt) {
+        die("Query preparation failed: " . $dblink->error);
+    }
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    ?>
 
-        #dropdown-content button {
-            display: block;
-            width: 100%;
-            padding: 10px 12px;
-            text-align: left;
-            border: none;
-            background-color: transparent;
-            cursor: pointer;
-        }
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Opportunity ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Start Time / End Time</th>
+                <th>Signed Up / Needed Volunteers</th>
+                <th>Volunteers (Name & Email)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($result && $result->num_rows > 0): ?>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo ($row['id']); ?></td>
+                        <td><?php echo ($row['title']); ?></td>
+                        <td><?php echo ($row['description']); ?></td>
+                        <td><?php echo ($row['location']); ?></td>
+                        <td><?php echo ($row['datetime_start'] . " / " . $row['datetime_end']); ?></td>
+                        <td><?php echo ($row['signed_up_count'] . " / " . $row['needed_volunteers']); ?></td>
+                        <td>
+                            <?php
+                            $volunteer_sql = "
+                                SELECT u.first_name, u.last_name, u.email
+                                FROM volunteer_signup vs
+                                INNER JOIN users u ON vs.volunteer_id = u.id
+                                WHERE vs.opportunity_id = ?
+                            ";
+                            $volunteer_stmt = $dblink->prepare($volunteer_sql);
+                            if (!$volunteer_stmt) {
+                                die("Volunteer query preparation failed: " . $dblink->error);
+                            }
+                            $volunteer_stmt->bind_param("i", $row['id']);
+                            $volunteer_stmt->execute();
+                            $volunteer_result = $volunteer_stmt->get_result();
+                            if ($volunteer_result && $volunteer_result->num_rows > 0):
+                                while ($volunteer = $volunteer_result->fetch_assoc()):
+                                    echo ($volunteer['first_name'] . " " . $volunteer['last_name'] . " (" . $volunteer['email'] . ")<br>");
+                                endwhile;
+                            else:
+                                echo "No volunteers signed up.";
+                            endif;
+                            ?>
+                        </td>
+                        <td>
+                            <form class="opportunity-form" method="POST" action="">
+                                <input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
+                                <input type="hidden" name="action" value="delete">
+                                <button type="submit">Delete Opportunity</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <tr><td colspan="8">You have not posted any opportunities.</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
 
-        #dropdown-content button:hover {
-            background-color: #ddd;
-        }
+<?php endif; ?>
 
-        #buttons {
-            text-align: right;
-        }
-
-        #buttons button {
-            margin-left: 6px;
-            background-color: #140650;
-            color: #FFFFFF;
-            border: 1px solid #2E6DA4;
-            border-radius: 4px;
-            padding: 6px 20px;
-            font-family: 'Roboto', Arial, sans-serif;
-            font-weight: normal;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .container {
-            position: relative;
-            width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .centered-text {
-            text-align: center;
-            color: #140650;
-            font-size: 20px;
-            font-family: 'Roboto', Arial, sans-serif;
-            margin-bottom: 20px;
-        }
-
-        .green-area {
-            background-color: #7CC623;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            width: 100%; /* Adjust width */
-            max-width: 800px; /* Limit maximum width */
-        }
-
-        .results-area {
-            width: 90%; /* Adjust width */
-            max-width: 800px; /* Limit maximum width */
-            max-height: 300px; /* Adjust the height as needed */
-            overflow-y: auto; /* Enable vertical scrollbar */
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            box-sizing: border-box;
-            margin-bottom: 30px;
-            display: flex; /* Use flexbox */
-            flex-direction: column; /* Stack items vertically */
-            align-items: center; /* Center items horizontally */
-            margin: 0 auto; /* Center horizontally */
-        }
-
-
-        .opportunity {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        /* Dropdown Styles */
-        .dropdown {
-        position: relative;
-        display: inline-block;
-        }
-
-        .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: #f9f9f9;
-        min-width: 160px;
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-        z-index: 1;
-        right: 0; /* Align dropdown to the right */
-        top: 100%; /* Position dropdown below the icon */
-        }
-
-        .dropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-        }
-
-        .dropdown-content a:hover {
-        background-color: #ddd;
-        }
-
-        /* Show the dropdown menu on hover */
-        .dropdown:hover .dropdown-content {
-        display: block;
-        }
-
-        .search-container {
-            text-align: center;
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .search-container input,
-        .search-container select {
-            margin: 5px;
-            padding: 8px; /* Increase padding for more vertical space */
-            width: calc(50% - 10px); /* Adjust width */
-            box-sizing: border-box;
-        }
-
-        .search-button {
-            background-color: #140650;
-            color: #FFFFFF;
-            border: 1px solid #2E6DA4;
-            border-radius: 4px;
-            padding: 6px 20px;
-            margin-top: 10px;
-            font-family: 'Roboto', Arial, sans-serif;
-            font-weight: normal;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        footer {
-            text-align: center;
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-            position: fixed;
-            bottom: 0;
-            width: calc(100% - 40px); /* Adjust width to account for the margins */
-        }
-    </style>
-</head>
-
-<body>
-
-    <div id="header">
-        <div id="logo-dropdown-container">
-            <div id="dropdown">
-                <span id="dropdown-icon">&#9776;</span>
-                <div id="dropdown-content">
-                    <a href="./find_volunteer_opportunities.html"><button>Find Volunteer Opportunities</button></a>
-                    <a href="./about_us.html"><button>About Us</button></a>
-                    <a href="./faq.html"><button>FAQs</button></a>
-                    <a href="./contact_us.html"><button>Contact Us</button></a>
-                </div>
-            </div>
-            <div id="logo">
-                <a href="index.html">
-                    <img src="images/logo.png" alt="The Logo">
-                </a>
-            </div>
-        </div>
-        <div id="buttons">
-            <a href="./signup.html"><button>Sign Up</button></a>
-            <a href="./signin.html"><button>Sign In</button></a>
-            <div class="dropdown">
-                <img src="./images/profile_icon.png" alt="Icon Image" id="dropdownIcon">
-                <div class="dropdown-content" id="dropdownContent">
-                    <a href="./dashboard.html">Dashboard</a>
-                    <a href="./Account_Settings.html">Account Settings</a>
-                    <a href="./logout.html">Logout</a>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-
-    <div class="container">
-        <div class="centered-text">
-
-            <h3>Registered Volunteer Engagements</h3>
-
-            <div class="results-area">
-                <div class="opportunity">
-                    <p><strong>Event Name:</strong> Community Clean-up Day</p>
-                    <p><strong>Organization:</strong> Green Earth Foundation</p>
-                    <p><strong>Task:</strong> Collecting trash in the community</p>
-                    <p><strong>Date:</strong> April 20, 2024</p>
-                    <p><strong>Time:</strong> 10:00 AM - 2:00 PM</p>
-                    <p><strong>Location:</strong> Los Angeles, CA 90001</p>
-                    <button type="button" class="search-button">Unregister</button>
-                </div>
-                <div class="opportunity">
-                    <p><strong>Event Name:</strong> Food Drive for the Homeless</p>
-                    <p><strong>Organization:</strong> Helping Hands Charity</p>
-                    <p><strong>Task:</strong> Collecting and distributing food items</p>
-                    <p><strong>Date:</strong> May 1, 2024</p>
-                    <p><strong>Time:</strong> 11:00 AM - 3:00 PM</p>
-                    <p><strong>Location:</strong> Chicago, IL 60601</p>
-                    <button type="button" class="search-button">Unregister</button>
-                </div>
-                <div class="opportunity">
-                    <p><strong>Event Name:</strong> Tutoring Session for Underprivileged Children</p>
-                    <p><strong>Organization:</strong> Education for All</p>
-                    <p><strong>Task:</strong> Providing academic support to children</p>
-                    <p><strong>Date:</strong> May 10, 2024</p>
-                    <p><strong>Time:</strong> 3:00 PM - 5:00 PM</p>
-                    <p><strong>Location:</strong> Houston, TX 77001</p>
-                    <button type="button" class="search-button">Unregister</button>
-                </div>
-            </div>            
-
-        </div>
-    </div>
-
-    <footer>
-        &copy; 2024 Volunteer Hub. All rights reserved.
-    </footer>
-
-</body>
-
-</html>
+<?php
+// Close the database connection
+$dblink->close();
+?>

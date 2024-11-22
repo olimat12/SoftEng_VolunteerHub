@@ -1,6 +1,11 @@
 <?php
 //include dblink and redirect functions used by most pages
-include("functions.php");
+if (file_exists("functions.php")) {
+    include("functions.php");
+} else {
+    die("functions.php not found. Check the file path.<br>");
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -9,7 +14,7 @@ include("functions.php");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | Volunteer Hub</title>
+    <title>Volunteer Hub</title>
     
     <!-- Link to external stylesheet -->
     <link rel="stylesheet" href="assets/css/styles.css">
@@ -58,6 +63,12 @@ include("functions.php");
                 break;
             case "logout":
                 include("logout.php");
+                break;
+            case "post_event":
+                include("post_event.php");
+                break;
+			case "account_settings":
+                include("account_settings.php");
                 break;
             default:
                 include("home.php");
