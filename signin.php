@@ -21,7 +21,7 @@ if (!isset($_POST['submit'])) {
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required><br><br>
             <button type="submit" name="submit">Sign In</button><br>
-            <p>New to Volunteer Hub? <a href="signup.php">Join Today</a></p>
+            <p>New to Volunteer Hub? <a href="index.php?page=signup">Join Today</a></p>
         </form>
     </div>
 <?php
