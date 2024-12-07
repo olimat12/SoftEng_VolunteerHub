@@ -311,6 +311,7 @@
     </style>
 	<h2>WORK IN PROGRESS</h2>
     <div class="container">
+		 <form action="" method="POST">
         <form>
             <div class="profile-picture-container">
                 <div class="profile-picture">
@@ -364,7 +365,7 @@
             <input type="confirmpassword" id="confirmpassword" name="confirmpassword"><br>
         
             <button type="submit">Change Password</button>
-
+		
         </form>
         
 

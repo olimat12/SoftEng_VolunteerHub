@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <dwsync>
-<file name="about_us.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133748738327740290" remote="133748774380000000" Dst="1" />
-<file name="account_settings.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133766802131077400" remote="133766802130000000" Dst="1" />
+<file name="account_settings.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133780751023927153" remote="133780751050000000" Dst="1" />
 <file name="contact_us.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133758993855843934" remote="133766018950000000" Dst="1" />
 <file name="dashboard.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133767779885126645" remote="133767779920000000" Dst="1" />
-<file name="faq.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133757364980930816" remote="133757364980000000" Dst="1" />
 <file name="index.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133766828049903328" remote="133766828050000000" Dst="1" />
-<file name="organization_dashboard.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133757365820178295" remote="133757365820000000" Dst="1" />
 <file name="post_event.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133766018997009030" remote="133766018990000000" Dst="1" />
 <file name="signin.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133771152904403027" remote="133771152900000000" Dst="1" />
-<file name="functions.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133766072180033332" remote="133766072180000000" Dst="1" />
 <file name="navigation.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133766798526332317" remote="133766798530000000" Dst="1" />
 <file name="signup.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133766035166010443" remote="133766035180000000" Dst="1" />
-<file name="home.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133748714295719351" remote="133748750610000000" Dst="1" />
-<file name="logout.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133748714295729349" remote="133748750630000000" Dst="1" />
 <file name="find_opportunities.php" server="ec2-13-59-42-198.us-east-2.compute.amazonaws.com//var/www/html/" local="133766837061885969" remote="133766837060000000" Dst="1" />
 </dwsync>
