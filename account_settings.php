@@ -1,4 +1,50 @@
+	<?php
+	
+	//Display all errors
+	//error_reporting(E_ALL);
+	//ini_set('display_errors', 1);
+	
+	// error: "Failed opening required 'functions.php;' (include_path='.:/usr/share/php') in /var/www/html/account_settings.php:7 Stack trace: #0 /var/www/html/index.php(71): include() #1 {main} thrown in /var/www/html/account_settings.php on line 7"
+	//require_once 'functions.php;'; // Include functions.php for db_connect function
 
+	if (session_status() === PHP_SESSION_NONE) {
+		session_start();
+	}
+
+	$user_type = $_SESSION['user_type'];
+	$user_id = $_SESSION['user_id'];
+
+	// Ensure user is logged in
+	if (!isset($user_type)) {
+		die("Access denied. You must be logged in.");
+	}
+
+	// Connect to the database
+	$dblink = db_connect("volunteerhub");
+	if (!$dblink) {
+		die("Database connection failed: " . mysqli_connect_error());
+	}
+
+	//Load user info to put into text boxes
+	$sql = "
+		SELECT first_name, last_name, company_name, zip_code, phone, email
+		FROM users
+		WHERE users.id = ?
+	";
+	$stmt = $dblink->prepare($sql);
+	if (!$stmt) {
+		die("Query preparation failed: " . $dblink->error);
+	}
+	$stmt->bind_param("i", $user_id);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$row = $result->fetch_assoc();
+	
+	//TODO: user info update functionality (currently only loading to be displayed in browser)
+	//TODO: password update functionality
+	//TODO: user delete functionality
+	
+	?>
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <style>
@@ -266,7 +312,6 @@
 	<h2>WORK IN PROGRESS</h2>
     <div class="container">
         <form>
-			<!-- Test comment -->
             <div class="profile-picture-container">
                 <div class="profile-picture">
                     <img src="profile_picture.jpg">
@@ -285,25 +330,25 @@
             <div class="name-container">
                 <div class="input-wrapper">
                     <label for="firstname">First Name:</label>
-                    <input type="text" id="firstname" name="firstname">
+                    <input type="text" id="firstname" name="firstname" value="<?php echo ($row['first_name']); ?>">
                 </div>
                 <div class="input-wrapper">
                     <label for="lastname">Last Name:</label>
-                    <input type="text" id="lastname" name="lastname">
+                    <input type="text" id="lastname" name="lastname" value="<?php echo ($row['last_name']); ?>">
                 </div>
             </div>
         
             <label for="companyname">Company Name: (Optional)</label>
-            <input type="text" id="companyname" name="companyname"><br>
+            <input type="text" id="companyname" name="companyname" value="<?php echo ($row['company_name']); ?>"><br>
         
             <label for="zipcode">Zipcode:</label>
-            <input type="zipcode" id="zipcode" name="zipcode"><br>
+            <input type="zipcode" id="zipcode" name="zipcode" value="<?php echo ($row['zip_code']); ?>"><br>
         
             <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone"><br>
+            <input type="tel" id="phone" name="phone" value="<?php echo ($row['phone']); ?>"><br>
         
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email"><br>
+            <input type="email" id="email" name="email" value="<?php echo ($row['email']); ?>"><br>
 
             <button type="submit">Update Information</button>
         
@@ -325,3 +370,8 @@
 
         
     </div>
+
+	<?php
+	//close the database connection
+	$dblink->close();
+	?>
