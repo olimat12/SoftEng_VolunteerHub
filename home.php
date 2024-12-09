@@ -1,3 +1,4 @@
+<!-- Landing page -->
 <div class="home-container home-bg">
     <div class="centered-text">
         <h1>Welcome to Volunteer Hub!</h1>
