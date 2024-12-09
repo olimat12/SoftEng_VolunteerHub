@@ -79,9 +79,10 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_REQUEST['opportunity_id']
                 if (!$stmt_signup->execute()) {
                     die("Signup query execution failed: " . $stmt_signup->error);
                 }
-                echo "<h2 class='centered-text' style='color: green;'>Successfully signed up for opportunity.</h2>";
+                echo "<h1 class='centered-text' style='color: green;'>Successfully signed up for opportunity.</h1>";
             }
         }
+		//Timeout script for success message
         echo "<script type='text/javascript'>setTimeout(function() { window.location.href = 'index.php?page=find_opportunities'; }, 2000);</script>";
         exit;
     } elseif ($action === 'unregister') {
@@ -108,7 +109,7 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_REQUEST['opportunity_id']
             if (!$stmt->execute()) {
                 die("Unregister query execution failed: " . $stmt->error);
             } else {
-                echo "<p style='color: green;'>PLACEHOLDER: Successfully unregistered from opportunity.</p>";
+                echo "<h1 style='color: red;'>Successfully unregistered from opportunity.</h1>";
             }
         }
         echo "<script type='text/javascript'>setTimeout(function() { window.location.href = 'index.php?page=find_opportunities'; }, 2000);</script>";
@@ -153,35 +154,48 @@ $result = $stmt->get_result();
     </thead>
     <tbody>
         <?php if ($result && $result->num_rows > 0): ?>
-            <?php while ($row = $result->fetch_assoc()): ?>
-                <tr>
-                    <td><?php echo ($row['id']); ?></td>
-                    <td><?php echo ($row['company_name']); ?></td>
-                    <td><?php echo ($row['title']); ?></td>
-                    <td><?php echo ($row['description']); ?></td>
-					<td><?php echo ($row['location']); ?></td>
-                    <td><?php echo ($row['datetime_start'] . " / " . $row['datetime_end']); ?></td>
-                    <td><?php echo ($row['signed_up_count'] . " / " . $row['needed_volunteers']); ?></td>
-                    <td>
-                        <?php if ($row['is_signed_up']): ?>
-                            <form class="opportunity-form" method="POST" action="find_opportunities.php">
-                                <input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
-                                <input type="hidden" name="action" value="unregister">
-                                <button type="submit">Unregister</button>
-                            </form>
-                        <?php else: ?>
-                            <form class="opportunity-form" method="POST" action="find_opportunities.php">
-                                <input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
-                                <input type="hidden" name="action" value="signup">
-                                <button type="submit">Sign Up</button>
-                            </form>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <tr><td colspan="7">No opportunities available</td></tr>
-        <?php endif; ?>
+		<?php while ($row = $result->fetch_assoc()): ?>
+			<tr>
+				<td><?php echo ($row['id']); ?></td>
+				<td><?php echo ($row['company_name']); ?></td>
+				<td><?php echo ($row['title']); ?></td>
+				<td><?php echo ($row['description']); ?></td>
+				<td><?php echo ($row['location']); ?></td>
+				<td>
+					<?php
+					// Parse the datetime strings and format them
+					$datetime_start = DateTime::createFromFormat('Y-m-d H:i:s', $row['datetime_start']);
+					$datetime_end = DateTime::createFromFormat('Y-m-d H:i:s', $row['datetime_end']);
+
+					if ($datetime_start && $datetime_end) {
+						// Format the datetime into a readable format
+						echo $datetime_start->format('M d, Y h:i A') . " - " . $datetime_end->format('h:i A');
+					} else {
+						echo "Invalid date format"; // Fallback in case of unexpected datetime input
+					}
+					?>
+				</td>
+				<td><?php echo ($row['signed_up_count'] . " / " . $row['needed_volunteers']); ?></td>
+				<td>
+					<?php if ($row['is_signed_up']): ?>
+						<form class="opportunity-form" method="POST" action="find_opportunities.php">
+							<input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
+							<input type="hidden" name="action" value="unregister">
+							<button type="submit">Unregister</button>
+						</form>
+					<?php else: ?>
+						<form class="opportunity-form" method="POST" action="find_opportunities.php">
+							<input type="hidden" name="opportunity_id" value="<?php echo $row['id']; ?>">
+							<input type="hidden" name="action" value="signup">
+							<button type="submit">Sign Up</button>
+						</form>
+					<?php endif; ?>
+				</td>
+			</tr>
+		<?php endwhile; ?>
+	<?php else: ?>
+		<tr><td colspan="7">No opportunities available</td></tr>
+	<?php endif; ?>
     </tbody>
 </table>
 
