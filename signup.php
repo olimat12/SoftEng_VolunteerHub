@@ -26,7 +26,8 @@
 		<!-- No input validation for company name -->
         <label for="companyname">Company Name:</label>
         <input type="text" id="companyname" name="companyname"><br>
-
+		
+		<!-- Input and validation -->
         <label for="zipcode">Zipcode:</label>
         <input type="text" id="zipcode" name="zipcode" required><br>
 		<?php if (isset($_GET['errMsg']) && strstr($_GET['errMsg'], "zipcodeInvalid")) {?>
@@ -67,6 +68,7 @@
 			</div>
 		<?php } ?>
 		
+		<!-- Radio button selection for account type -->
 		<br><label>Account Type:</label><br>
 		<div class="radio-wrapper">
 			<label for="volunteer">
@@ -85,6 +87,7 @@
     </form>
 </div>
 
+<!-- JS for making company required when 'organizer' radio is selected -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const organizerRadio = document.getElementById('organizer');
@@ -120,7 +123,8 @@ if (isset($_POST['submit'])) {
 	$_SESSION['phone'] 		 = "";
 	$_SESSION['email'] 		 = "";
 	$_SESSION['user_type']   = "";
-	 
+	
+	//Assign variables from form
 	$username 	 =$_POST['username'];
 	$password	 =$_POST['password'];
 	$firstname	 =$_POST['firstname'];

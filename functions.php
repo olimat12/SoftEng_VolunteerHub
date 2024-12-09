@@ -1,5 +1,6 @@
 <?php
 
+//Reusable function to connect to the database
 function db_connect($db) {
     $dbusername = "webuser";
     $dbpassword = "VolHub123!";
@@ -17,7 +18,7 @@ function db_connect($db) {
     return $dblink;
 }
 
-
+//Reusable redirect to be used instead of header
 function redirect ( $uri )
 { ?>
     <script type="text/javascript">

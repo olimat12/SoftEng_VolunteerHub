@@ -58,10 +58,10 @@ if ($user_type === 'organizer') {
 }
 ?>
 
-<h2 class="centered-text">Dashboard <?php echo $company_name ? "- " . htmlspecialchars($company_name) : ""; ?></h2>
+<h1 class="centered-text">Dashboard <?php echo $company_name ? "- " . htmlspecialchars($company_name) : ""; ?></h2>
 
 <?php if ($user_type === 'volunteer'): ?>
-    <h3>Opportunities You've Signed Up For</h3>
+    <h3 class="centered-text">Opportunities You've Signed Up For</h3>
     <?php
     $sql = "
         SELECT o.id, o.title, o.description, o.location, o.datetime_start, o.datetime_end, u.company_name

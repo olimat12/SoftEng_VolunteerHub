@@ -6,6 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+//Set ID from session
 $volunteer_id = $_SESSION['user_id'];
 
 // Ensure user is logged in as a volunteer
@@ -60,7 +61,8 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_REQUEST['opportunity_id']
         if (!$result) {
             die("Error fetching opportunity: " . $stmt->error);
         }
-
+		
+		//Opportunity logic
         if ($result->num_rows === 0) {
             echo "<p style='color: red;'>Opportunity not found.</p>";
         } else {
@@ -77,7 +79,7 @@ if (($_SERVER['REQUEST_METHOD'] === 'POST') && isset($_REQUEST['opportunity_id']
                 if (!$stmt_signup->execute()) {
                     die("Signup query execution failed: " . $stmt_signup->error);
                 }
-                echo "<p style='color: green;'>PLACEHOLDER: Successfully signed up for opportunity.</p>";
+                echo "<h2 class='centered-text' style='color: green;'>Successfully signed up for opportunity.</h2>";
             }
         }
         echo "<script type='text/javascript'>setTimeout(function() { window.location.href = 'index.php?page=find_opportunities'; }, 2000);</script>";

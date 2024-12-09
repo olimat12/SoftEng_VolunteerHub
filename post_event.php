@@ -1,5 +1,6 @@
 <div>
 	<?php
+	//Handling of invalid session type trying to post an opportunity
 	if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'organizer') 
 	{
     $errMsg = "inavlidUserType";

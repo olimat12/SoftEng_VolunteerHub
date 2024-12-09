@@ -344,11 +344,10 @@ form button {
 }
 
 table {
-    width: 100%;
+    width: 90%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin: 20px auto;
     font-size: 16px;
-    text-align: left;
     background-color: whitesmoke;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -371,7 +370,7 @@ tbody tr:hover {
 th, td {
     padding: 15px;
     border-bottom: 1px solid #ddd;
-	text-align: center;
+	text-align: left;
 	vertical-align: middle;
 }
 
